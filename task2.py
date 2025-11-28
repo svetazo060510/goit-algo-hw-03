@@ -11,7 +11,6 @@ def koch_side(t, order, size):
     if order == 0:
         t.forward(size)
     else:
-        # Кожен сегмент розділяється на 4 менші сегменти
         # Довжина кожного нового сегмента становить size / 3
         new_size = size / 3.0
         
@@ -55,6 +54,7 @@ if __name__ == "__main__":
     screen.bgcolor("white")
     
     t = turtle.Turtle()
+    # Можемо обрати "slowest", "slow", "normal", "fast", "fastest" OR t.speed(1-10) 
     t.speed("fastest") # Максимальна швидкість малювання
     t.penup() # Підняти перо, щоб переміститися без малювання
     
