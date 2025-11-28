@@ -4,6 +4,17 @@ import argparse
 from pathlib import Path
 
 # =================================================================
+# 0. ANSI КОДИ КОЛЬОРІВ
+# =================================================================
+
+# Кольори для терміналу
+COLOR_SUCCESS = "\033[92m" # Green - Успіх
+COLOR_INFO = "\033[94m"    # Blue - Інформація
+COLOR_WARNING = "\033[93m"  # Yellow - Попередження
+COLOR_ERROR = "\033[91m"    # Red - Помилка
+COLOR_RESET = "\033[0m"     # Скидання кольору
+
+# =================================================================
 # 1. ФУНКЦІЯ РЕКУРСИВНОГО СОРТУВАННЯ ТА КОПІЮВАННЯ
 # =================================================================
 
@@ -21,6 +32,8 @@ def recursive_file_sorter(source_path, output_dir):
             
             # 2. Якщо елемент є директорією -> РЕКУРСИВНИЙ ВИКЛИК
             if item.is_dir():
+                # Логування рекурсивного входу
+                print(f"{COLOR_INFO} Вхід до директорії: {item.name}{COLOR_RESET}")
                 # Виклик функції самої себе для піддиректорії
                 recursive_file_sorter(item, output_dir)
             
@@ -42,14 +55,14 @@ def recursive_file_sorter(source_path, output_dir):
                 # Копіювання файлу: shutil.copy2 зберігає метадані
                 try:
                     shutil.copy2(item, target_subdirectory)
-                    print(f"Копіювання: {item.name} -> {target_subdirectory}")
+                    print(f"{COLOR_SUCCESS} Копіювання: {item.name} -> {target_subdirectory}{COLOR_RESET}")
                 except Exception as e:
-                    print(f"Помилка копіювання файлу {item.name}: {e}")
+                    print(f"{COLOR_ERROR} Помилка копіювання файлу {item.name}: {e}{COLOR_RESET}")
 
     except PermissionError:
-        print(f"Помилка: Недостатньо прав для доступу до директорії {source_path}")
+        print(f"{COLOR_ERROR} Помилка: Недостатньо прав для доступу до директорії {source_path}{COLOR_RESET}")
     except Exception as e:
-        print(f"Виникла несподівана помилка при обробці {source_path}: {e}")
+        print(f"{COLOR_WARNING} Виникла несподівана помилка при обробці {source_path}: {e}{COLOR_RESET}")
 
 
 # =================================================================
@@ -80,28 +93,28 @@ def main():
 
     # Перевірка існування вихідної директорії
     if not source_path.is_dir():
-        print(f"Помилка: Вихідна директорія '{source_path}' не існує.")
+        print(f"{COLOR_ERROR}Помилка: Вихідна директорія '{source_path}' не існує.{COLOR_RESET}")
         return
 
     # Створення директорії призначення, якщо вона ще не існує
     try:
         output_dir.mkdir(parents=True, exist_ok=True)
     except Exception as e:
-        print(f"Помилка при створенні директорії призначення '{output_dir}': {e}")
+        print(f"{COLOR_ERROR}Помилка при створенні директорії призначення '{output_dir}': {e}{COLOR_RESET}")
         return
 
-    print(f"--- Запуск сортування ---")
-    print(f"Вихідна директорія: {source_path.resolve()}")
-    print(f"Директорія призначення: {output_dir.resolve()}")
-    print("-" * 25)
+    print(f"\n{COLOR_INFO}-------- Запуск сортування --------{COLOR_RESET}")
+    print(f"Вихідна директорія: {COLOR_INFO}{source_path.resolve()}{COLOR_RESET}")
+    print(f"Директорія призначення: {COLOR_INFO}{output_dir.resolve()}{COLOR_RESET}")
+    print("-" * 35)
     
     # Запуск рекурсивного процесу
     recursive_file_sorter(source_path, output_dir)
     
-    print("-" * 25)
-    print("--- Сортування завершено! ---")
+    print("-" * 35)
+    print(f"{COLOR_SUCCESS}------ Сортування завершено! ------{COLOR_RESET}\n")
 
 if __name__ == "__main__":
     main()
 
-# python3 sorter.py source_test
+# from the folder: python3 sorter.py source_test
